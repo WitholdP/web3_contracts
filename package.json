@@ -311,7 +311,6 @@
     "picomatch": "^2.3.1",
     "pify": "^4.0.1",
     "prelude-ls": "^1.1.2",
-    "prettier": "^2.8.0",
     "process-nextick-args": "^2.0.1",
     "promise": "^8.3.0",
     "psl": "^1.9.0",
@@ -437,7 +436,9 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "mocha": "^10.1.0"
+    "mocha": "^10.1.0",
+    "prettier": "^2.8.0",
+    "prettier-plugin-solidity": "^1.0.0"
   },
   "scripts": {
     "test": "mocha"
