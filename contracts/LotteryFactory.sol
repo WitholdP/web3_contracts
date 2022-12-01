@@ -18,7 +18,7 @@ contract LotteryFactory is Ownable {
         string item;
         uint32 minPeople;
         uint256 price;
-        uint32 finishDate;
+        uint256 finishDate;
         bool status;
     }
 
@@ -28,8 +28,12 @@ contract LotteryFactory is Ownable {
         string memory item,
         uint32 minPeople,
         uint256 price,
-        uint32 finishDate
+        uint256 finishDate
     ) public onlyOwner returns (uint256) {
+        require(
+            finishDate > block.timestamp,
+            "finishDate has to be in the future"
+        );
         uint256 id = _lotteryIds.current();
         LotteryItem memory newLotteryItem = LotteryItem(
             id,

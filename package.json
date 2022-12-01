@@ -435,6 +435,7 @@
     "yocto-queue": "^0.1.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "mocha": "^10.1.0",
     "prettier": "^2.8.0",
