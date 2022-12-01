@@ -4,8 +4,6 @@ interface LotteryItem {
   price: number;
 }
 
-const now = Date.now();
-
 export const lotteryItem: LotteryItem = {
   item: "https://sample.item.pl",
   minPeople: 100,

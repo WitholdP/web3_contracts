@@ -20,6 +20,7 @@ contract LotteryFactory is Ownable {
         uint256 price;
         uint256 finishDate;
         bool status;
+        address[] members;
     }
 
     mapping(uint256 => LotteryItem) lotteryItems;
@@ -30,10 +31,15 @@ contract LotteryFactory is Ownable {
         uint256 price,
         uint256 finishDate
     ) public onlyOwner returns (uint256) {
+        bytes memory tempEmptyStringTest = bytes(item);
+        require(tempEmptyStringTest.length > 0, "Item can't be empty");
+        require(minPeople > 0, "Amount of people must be more than 0");
+        require(price > 0, "Price must be more than 0");
         require(
             finishDate > block.timestamp,
-            "finishDate has to be in the future"
+            "FinishDate has to be in the future"
         );
+        _lotteryIds.increment();
         uint256 id = _lotteryIds.current();
         LotteryItem memory newLotteryItem = LotteryItem(
             id,
@@ -41,12 +47,12 @@ contract LotteryFactory is Ownable {
             minPeople,
             price,
             finishDate,
-            false
+            false,
+            new address[](0)
         );
         lotteryItems[id] = newLotteryItem;
 
         lotteryIdsList.push(id);
-        _lotteryIds.increment();
         return id;
     }
 
@@ -57,6 +63,18 @@ contract LotteryFactory is Ownable {
     function getLotteryItem(
         uint256 lotteryId
     ) public view returns (LotteryItem memory) {
-        return lotteryItems[lotteryId];
+        LotteryItem storage item = lotteryItems[lotteryId];
+        require(item.lotteryId != 0, "This item does not exist");
+        return item;
+    }
+
+    function addLotteryMember(
+        address userAddress,
+        uint256 lotteryId
+    ) public returns (LotteryItem memory) {
+        LotteryItem storage item = lotteryItems[lotteryId];
+        require(item.lotteryId != 0, "This item does not exist");
+        item.members.push(userAddress);
+        return item;
     }
 }
