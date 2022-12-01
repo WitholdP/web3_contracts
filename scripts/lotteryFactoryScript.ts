@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { lotteryItem } from "../test/fixtures";
+import { lotteryItem } from "../test/LotteryTests/fixtures";
 
 async function main() {
   const Contract = await ethers.getContractFactory("LotteryFactory");
