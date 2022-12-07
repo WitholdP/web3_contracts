@@ -442,9 +442,12 @@
     "prettier-plugin-solidity": "^1.0.0"
   },
   "scripts": {
-    "test": "mocha"
+    "node": "npx hardhat node",
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile",
+    "lotteryScript": "npx hardhat run scripts/lotteryFactoryScript.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Witold Piecewicz",
   "license": "ISC"
 }

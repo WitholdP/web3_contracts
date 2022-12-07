@@ -91,6 +91,7 @@ describe("Signature Contract tests", function () {
     expect(lotteryIdsList.length).to.equal(1);
   });
 
+  // TODO Refactor all Does Not exist
   it("Test getLotteryItem does not exist", async function () {
     await expect(contract.getLotteryItem(0)).to.be.revertedWith(
       "This item does not exist"
@@ -104,7 +105,74 @@ describe("Signature Contract tests", function () {
     expect(getLotteryItem.minPeople).to.equal(lotteryItem.minPeople);
     expect(getLotteryItem.price).to.equal(lotteryItem.price);
     expect(getLotteryItem.finishDate).to.be.greaterThan(now);
-    expect(getLotteryItem.status).to.equal(false);
-    expect(getLotteryItem.members.length).to.equal(0);
+    expect(getLotteryItem.status).to.equal(true);
   });
+
+  it("Test addLotteryMember does not exist", async function () {
+    const [owner, otherAccount] = await ethers.getSigners();
+    await expect(
+      contract.connect(otherAccount).addLotteryMember(0, "comment")
+    ).to.be.revertedWith("This item does not exist");
+  });
+
+  [
+    {
+      bid: "0.01",
+      comment: "comment",
+      revert: "You have paid to little for the bid",
+    },
+    {
+      bid: "0.1",
+      comment: "",
+      revert: "Comment can't be empty",
+    },
+  ].forEach((testCase) => {
+    it(`Test addLotteryMember validation ${testCase.revert}`, async function () {
+      const lotterItemId = 1;
+      const [owner, otherAccount] = await ethers.getSigners();
+
+      await expect(
+        contract
+          .connect(otherAccount)
+          .addLotteryMember(lotterItemId, testCase.comment, {
+            value: ethers.utils.parseEther(testCase.bid),
+          })
+      ).to.be.revertedWith(testCase.revert);
+      const getLotteryItemAfter = await contract.showLotteryMembers(
+        lotterItemId
+      );
+      expect(getLotteryItemAfter.length).to.equal(0);
+    });
+  });
+
+  it("Test addLotteryMember", async function () {
+    const lotterItemId = 1;
+    const [owner, otherAccount] = await ethers.getSigners();
+    const getLotteryMembers = await contract.showLotteryMembers(lotterItemId);
+    expect(getLotteryMembers.length).to.equal(0);
+
+    await contract
+      .connect(otherAccount)
+      .addLotteryMember(lotterItemId, "Comment", {
+        value: lotteryItem.price,
+      });
+    const getLotteryMembersAfter = await contract.showLotteryMembers(
+      lotterItemId
+    );
+    expect(getLotteryMembersAfter.length).to.equal(1);
+  });
+
+  it("Test showLotteryMembers does not exist", async function () {
+    await expect(contract.showLotteryMembers(0)).to.be.revertedWith(
+      "This item does not exist"
+    );
+  });
+
+  it("Test showLotteryMembers", async function () {
+    const lotterItemId = 1;
+    const getLotteryMembers = await contract.showLotteryMembers(lotterItemId);
+    expect(getLotteryMembers.length).to.equal(1);
+  });
+
+  //
 });
