@@ -18,7 +18,7 @@ contract LotteryFactory is Ownable {
      * @dev Throws if lottery does not exist.
      */
     modifier lotteryExists(uint256 lotteryId) {
-        LotteryItem storage item = lotteryItems[lotteryId];
+        LotteryItem memory item = lotteryItems[lotteryId];
         require(item.lotteryId > 0, "This item does not exist");
         _;
     }
@@ -37,6 +37,8 @@ contract LotteryFactory is Ownable {
         uint256 finishDate;
         bool status;
     }
+
+    event Winner(Member winner, uint256 lotteryId);
 
     mapping(uint256 => LotteryItem) private lotteryItems;
     mapping(uint256 => Member[]) private lotteryMembers;
@@ -99,5 +101,19 @@ contract LotteryFactory is Ownable {
         uint256 lotteryId
     ) public view lotteryExists(lotteryId) returns (Member[] memory) {
         return lotteryMembers[lotteryId];
+    }
+
+    function resolveLottery(
+        uint256 lotteryId,
+        uint256 winner
+    ) public onlyOwner lotteryExists(lotteryId) {
+        Member[] storage members = lotteryMembers[lotteryId];
+        require(
+            winner < members.length,
+            "Winner must be be in range from 0 to length of lottery members"
+        );
+        members[winner].hasWon = true;
+        lotteryItems[lotteryId].status = false;
+        emit Winner(members[winner], lotteryId);
     }
 }

@@ -81,7 +81,7 @@ describe("Signature Contract tests", function () {
   });
 
   it("Test addNewLottery", async function () {
-    const newLottery = await contract.addNewLottery(
+    await contract.addNewLottery(
       lotteryItem.item,
       lotteryItem.minPeople,
       lotteryItem.price,
@@ -174,5 +174,27 @@ describe("Signature Contract tests", function () {
     expect(getLotteryMembers.length).to.equal(1);
   });
 
-  //
+  it("Test resolveLottery does not exist", async function () {
+    await expect(contract.resolveLottery(0, 0)).to.be.revertedWith(
+      "This item does not exist"
+    );
+  });
+
+  it("Test resolveLottery by other account", async function () {
+    const [owner, otherAccount] = await ethers.getSigners();
+    const lotterItemId = 1;
+    await expect(
+      contract.connect(otherAccount).resolveLottery(lotterItemId, 0)
+    ).to.be.revertedWith("Ownable: caller is not the owner");
+    const getLotteryMembers = await contract.showLotteryMembers(lotterItemId);
+    expect(getLotteryMembers[0].hasWon).to.equal(false);
+  });
+
+  it("Test resolveLottery", async function () {
+    const lotterItemId = 1;
+    await contract.resolveLottery(lotterItemId, 0);
+
+    const getLotteryMembers = await contract.showLotteryMembers(lotterItemId);
+    expect(getLotteryMembers[0].hasWon).to.equal(true);
+  });
 });

@@ -11,20 +11,30 @@ const main = async () => {
   // Add new memnber to lettery
   await addNewLotteryMember(contract, 1);
 
-  console.log(await contract.showLotteryMembers(1));
+  await contract.resolveLottery(1, 1);
   // Show lottery details
   // console.log(await getLotteryDetails(contract, 1));
+  console.log(await contract.showLotteryMembers(1));
+
+  // const filter = contract.filters.Winner();
+  // contract.on(filter, async (setter, event) => {
+  //   console.log(setter);
+  // });
 };
 
 const addNewLotteryMember = async (contract: Contract, lotteryId: number) => {
   const [owner, otherAccount, otherAccount2] = await ethers.getSigners();
-  await contract.connect(otherAccount).addLotteryMember(lotteryId, "asd", {
-    value: ethers.utils.parseEther("0.1"),
-  });
+  await contract
+    .connect(otherAccount)
+    .addLotteryMember(lotteryId, "otherAccount comment", {
+      value: ethers.utils.parseEther("0.1"),
+    });
 
-  await contract.connect(otherAccount2).addLotteryMember(lotteryId, "asd", {
-    value: ethers.utils.parseEther("0.1"),
-  });
+  await contract
+    .connect(otherAccount2)
+    .addLotteryMember(lotteryId, "otherAccount2 comment", {
+      value: ethers.utils.parseEther("0.1"),
+    });
 };
 
 const getLotteryIds = async (contract: Contract) => {
