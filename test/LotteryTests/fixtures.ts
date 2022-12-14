@@ -10,5 +10,5 @@ interface LotteryItem {
 export const lotteryItem: LotteryItem = {
   item: "https://sample.item.pl",
   minPeople: 100,
-  price: ethers.utils.parseEther("0.1"),
+  price: ethers.utils.parseEther("1"),
 };

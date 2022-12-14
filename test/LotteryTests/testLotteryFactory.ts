@@ -9,6 +9,7 @@ describe("Signature Contract tests", function () {
   const now = Math.round(date.getTime() / 1000);
   const past = now - 1000;
   const future = now + 1000;
+  const bidValue = String(Number(lotteryItem.price) / lotteryItem.minPeople);
 
   before(async function () {
     const Contract = await ethers.getContractFactory("LotteryFactory");
@@ -117,12 +118,12 @@ describe("Signature Contract tests", function () {
 
   [
     {
-      bid: "0.01",
+      bid: String(Number(bidValue) - 1000000000000000), // subtracted value of 0.001eth in wei
       comment: "comment",
-      revert: "You have paid to little for the bid",
+      revert: `You have to pay ${bidValue}`,
     },
     {
-      bid: "0.1",
+      bid: bidValue,
       comment: "",
       revert: "Comment can't be empty",
     },
@@ -135,7 +136,7 @@ describe("Signature Contract tests", function () {
         contract
           .connect(otherAccount)
           .addLotteryMember(lotterItemId, testCase.comment, {
-            value: ethers.utils.parseEther(testCase.bid),
+            value: testCase.bid,
           })
       ).to.be.revertedWith(testCase.revert);
       const getLotteryItemAfter = await contract.showLotteryMembers(
@@ -154,7 +155,7 @@ describe("Signature Contract tests", function () {
     await contract
       .connect(otherAccount)
       .addLotteryMember(lotterItemId, "Comment", {
-        value: lotteryItem.price,
+        value: bidValue,
       });
     const getLotteryMembersAfter = await contract.showLotteryMembers(
       lotterItemId

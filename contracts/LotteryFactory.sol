@@ -89,9 +89,15 @@ contract LotteryFactory is Ownable {
         string memory comment
     ) public payable lotteryExists(lotteryId) returns (Member[] memory) {
         LotteryItem storage item = lotteryItems[lotteryId];
-        require(msg.value >= item.price, "You have paid to little for the bid");
+        uint256 buyIn = item.price / item.minPeople;
+        require(
+            msg.value == buyIn,
+            string.concat("You have to pay ", Strings.toString(buyIn))
+        );
+
         bytes memory tempEmptyStringTest = bytes(comment);
         require(tempEmptyStringTest.length > 0, "Comment can't be empty");
+
         Member memory member = Member(msg.sender, false, comment);
         lotteryMembers[lotteryId].push(member);
         return lotteryMembers[lotteryId];

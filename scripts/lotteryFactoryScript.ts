@@ -9,17 +9,16 @@ const main = async () => {
   await addNewLottery(contract);
 
   // Add new memnber to lettery
-  await addNewLotteryMember(contract, 1);
+  // await addNewLotteryMember(contract, 1);
 
-  await contract.resolveLottery(1, 1);
+  // Resolve lottery
+  // await contract.resolveLottery(1, 0);
+
   // Show lottery details
   // console.log(await getLotteryDetails(contract, 1));
-  console.log(await contract.showLotteryMembers(1));
 
-  // const filter = contract.filters.Winner();
-  // contract.on(filter, async (setter, event) => {
-  //   console.log(setter);
-  // });
+  // Show lottery members
+  // console.log(await contract.showLotteryMembers(1));
 };
 
 const addNewLotteryMember = async (contract: Contract, lotteryId: number) => {
@@ -27,14 +26,14 @@ const addNewLotteryMember = async (contract: Contract, lotteryId: number) => {
   await contract
     .connect(otherAccount)
     .addLotteryMember(lotteryId, "otherAccount comment", {
-      value: ethers.utils.parseEther("0.1"),
+      value: ethers.utils.parseEther("0.001"),
     });
 
-  await contract
-    .connect(otherAccount2)
-    .addLotteryMember(lotteryId, "otherAccount2 comment", {
-      value: ethers.utils.parseEther("0.1"),
-    });
+  // await contract
+  //   .connect(otherAccount2)
+  //   .addLotteryMember(lotteryId, "otherAccount2 comment", {
+  //     value: ethers.utils.parseEther("0.1"),
+  //   });
 };
 
 const getLotteryIds = async (contract: Contract) => {
