@@ -443,8 +443,8 @@
   },
   "scripts": {
     "node": "npx hardhat node",
-    "test": "npx hardhat test",
     "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
     "lotteryScript": "npx hardhat run scripts/lotteryFactoryScript.ts"
   },
   "keywords": [],
