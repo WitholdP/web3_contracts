@@ -9,3 +9,7 @@ typechain-types
 cache
 artifacts
 
+contracts/SkrzatContrakt.sol
+contracts/Twnkl.sol
+contracts/TwnklNFT.sol
+
