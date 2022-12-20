@@ -1,4 +1,3 @@
-//Contract based on [https://docs.openzeppelin.com/contracts/3.x/erc721](https://docs.openzeppelin.com/contracts/3.x/erc721)
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
@@ -24,7 +23,7 @@ contract LotteryFactory is Ownable {
     }
 
     struct Member {
-        address adress;
+        address payable walletAddress;
         bool hasWon;
         string comment;
     }
@@ -42,6 +41,30 @@ contract LotteryFactory is Ownable {
 
     mapping(uint256 => LotteryItem) private lotteryItems;
     mapping(uint256 => Member[]) private lotteryMembers;
+
+    function getLoteryIds() public view returns (uint256[] memory) {
+        return lotteryIdsList;
+    }
+
+    function getBuyIn(
+        uint256 lotteryId
+    ) public view lotteryExists(lotteryId) returns (uint256) {
+        LotteryItem storage item = lotteryItems[lotteryId];
+        return item.price / item.minPeople;
+    }
+
+    function getLotteryItem(
+        uint256 lotteryId
+    ) public view lotteryExists(lotteryId) returns (LotteryItem memory) {
+        LotteryItem storage item = lotteryItems[lotteryId];
+        return item;
+    }
+
+    function showLotteryMembers(
+        uint256 lotteryId
+    ) public view lotteryExists(lotteryId) returns (Member[] memory) {
+        return lotteryMembers[lotteryId];
+    }
 
     function addNewLottery(
         string memory item,
@@ -73,23 +96,11 @@ contract LotteryFactory is Ownable {
         return id;
     }
 
-    function getLoteryIds() public view returns (uint256[] memory) {
-        return lotteryIdsList;
-    }
-
-    function getLotteryItem(
-        uint256 lotteryId
-    ) public view lotteryExists(lotteryId) returns (LotteryItem memory) {
-        LotteryItem storage item = lotteryItems[lotteryId];
-        return item;
-    }
-
     function addLotteryMember(
         uint256 lotteryId,
         string memory comment
     ) public payable lotteryExists(lotteryId) returns (Member[] memory) {
-        LotteryItem storage item = lotteryItems[lotteryId];
-        uint256 buyIn = item.price / item.minPeople;
+        uint256 buyIn = getBuyIn(lotteryId);
         require(
             msg.value == buyIn,
             string.concat("You have to pay ", Strings.toString(buyIn))
@@ -98,14 +109,8 @@ contract LotteryFactory is Ownable {
         bytes memory tempEmptyStringTest = bytes(comment);
         require(tempEmptyStringTest.length > 0, "Comment can't be empty");
 
-        Member memory member = Member(msg.sender, false, comment);
+        Member memory member = Member(payable(msg.sender), false, comment);
         lotteryMembers[lotteryId].push(member);
-        return lotteryMembers[lotteryId];
-    }
-
-    function showLotteryMembers(
-        uint256 lotteryId
-    ) public view lotteryExists(lotteryId) returns (Member[] memory) {
         return lotteryMembers[lotteryId];
     }
 
@@ -118,8 +123,17 @@ contract LotteryFactory is Ownable {
             winner < members.length,
             "Winner must be be in range from 0 to length of lottery members"
         );
-        members[winner].hasWon = true;
-        lotteryItems[lotteryId].status = false;
-        emit Winner(members[winner], lotteryId);
+        LotteryItem storage item = lotteryItems[lotteryId];
+        uint256 buyIn = getBuyIn(lotteryId);
+        if (members.length >= item.minPeople) {
+            members[winner].hasWon = true;
+            payable(owner()).transfer(members.length * buyIn);
+            emit Winner(members[winner], lotteryId);
+        } else {
+            for (uint256 i = 0; i < members.length; i++) {
+                members[i].walletAddress.transfer(buyIn);
+            }
+        }
+        item.status = false;
     }
 }
