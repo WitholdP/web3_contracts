@@ -445,7 +445,8 @@
     "node": "npx hardhat node",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
-    "lotteryScript": "npx hardhat run scripts/lotteryFactoryScript.ts"
+    "lotteryScript": "npx hardhat run scripts/lotteryFactoryScript.ts",
+    "lotteryScript2": "npx hardhat run scripts/lotteryFactoryScript.ts"
   },
   "keywords": [],
   "author": "Witold Piecewicz",
