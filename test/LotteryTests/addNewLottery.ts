@@ -20,6 +20,7 @@ describe("Add new Lottery tests", function () {
         .connect(otherAccount)
         .addNewLottery(
           lotteryItem.item,
+          lotteryItem.name,
           lotteryItem.minPeople,
           lotteryItem.price,
           future
@@ -32,6 +33,7 @@ describe("Add new Lottery tests", function () {
   [
     {
       item: "",
+      name: lotteryItem.name,
       minPeople: lotteryItem.minPeople,
       price: lotteryItem.price,
       finishDate: future,
@@ -39,6 +41,15 @@ describe("Add new Lottery tests", function () {
     },
     {
       item: lotteryItem.item,
+      name: "",
+      minPeople: lotteryItem.minPeople,
+      price: lotteryItem.price,
+      finishDate: future,
+      revert: "Name can't be empty",
+    },
+    {
+      item: lotteryItem.item,
+      name: lotteryItem.name,
       minPeople: 0,
       price: lotteryItem.price,
       finishDate: future,
@@ -46,6 +57,7 @@ describe("Add new Lottery tests", function () {
     },
     {
       item: lotteryItem.item,
+      name: lotteryItem.name,
       minPeople: lotteryItem.minPeople,
       price: 0,
       finishDate: future,
@@ -53,6 +65,7 @@ describe("Add new Lottery tests", function () {
     },
     {
       item: lotteryItem.item,
+      name: lotteryItem.name,
       minPeople: lotteryItem.minPeople,
       price: lotteryItem.price,
       finishDate: past,
@@ -63,6 +76,7 @@ describe("Add new Lottery tests", function () {
       await expect(
         contract.addNewLottery(
           testCase.item,
+          testCase.name,
           testCase.minPeople,
           testCase.price,
           testCase.finishDate
@@ -76,6 +90,7 @@ describe("Add new Lottery tests", function () {
   it("Test addNewLottery", async function () {
     await contract.addNewLottery(
       lotteryItem.item,
+      lotteryItem.name,
       lotteryItem.minPeople,
       lotteryItem.price,
       future

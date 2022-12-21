@@ -23,7 +23,7 @@ const main = async () => {
   // await checkBalances(contract, owner, otherAccount, otherAccount2);
 
   // Show lottery details
-  // console.log(await getLotteryDetails(contract, 1));
+  console.log(await getLotteryDetails(contract, 1));
 
   // Show lottery members
   // console.log(await contract.showLotteryMembers(1));
@@ -70,7 +70,13 @@ const getLotteryDetails = async (contract: Contract, lotteryId: number) => {
 const addNewLottery = async (contract: Contract) => {
   const date = new Date();
   const future = Math.round(date.getTime() / 1000) + 1000;
-  await contract.addNewLottery(lotteryItem.item, 3, lotteryItem.price, future);
+  await contract.addNewLottery(
+    lotteryItem.item,
+    lotteryItem.name,
+    3,
+    lotteryItem.price,
+    future
+  );
 };
 
 const checkBalances = async (

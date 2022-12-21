@@ -16,12 +16,14 @@ describe("Lottery resolve tests", function () {
     contract = await Contract.deploy();
     await contract.addNewLottery(
       lotteryItem.item + "winner",
+      lotteryItem.name,
       lotteryItem.minPeople,
       lotteryItem.price,
       future
     );
     await contract.addNewLottery(
       lotteryItem.item + "return",
+      lotteryItem.name,
       lotteryItem.minPeople,
       lotteryItem.price,
       future

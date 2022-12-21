@@ -10,12 +10,14 @@ export const future = now + 1000;
 
 interface LotteryItem {
   item: string;
+  name: string;
   minPeople: number;
   price: BigNumber;
 }
 
 export const lotteryItem: LotteryItem = {
   item: "https://sample.item.pl",
+  name: "sample name",
   minPeople: 3,
   price: ethers.utils.parseEther("1"),
 };

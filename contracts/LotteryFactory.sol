@@ -31,6 +31,7 @@ contract LotteryFactory is Ownable {
     struct LotteryItem {
         uint256 lotteryId;
         string item;
+        string name;
         uint256 minPeople;
         uint256 price;
         uint256 finishDate;
@@ -68,12 +69,15 @@ contract LotteryFactory is Ownable {
 
     function addNewLottery(
         string memory item,
+        string memory name,
         uint256 minPeople,
         uint256 price,
         uint256 finishDate
     ) public onlyOwner returns (uint256) {
-        bytes memory tempEmptyStringTest = bytes(item);
-        require(tempEmptyStringTest.length > 0, "Item can't be empty");
+        bytes memory tempEmptyStringItem = bytes(item);
+        require(tempEmptyStringItem.length > 0, "Item can't be empty");
+        bytes memory tempEmptyStringName = bytes(name);
+        require(tempEmptyStringName.length > 0, "Name can't be empty");
         require(minPeople > 0, "Amount of people must be more than 0");
         require(price > 0, "Price must be more than 0");
         require(
@@ -85,6 +89,7 @@ contract LotteryFactory is Ownable {
         LotteryItem memory newLotteryItem = LotteryItem(
             id,
             item,
+            name,
             minPeople,
             price,
             finishDate,

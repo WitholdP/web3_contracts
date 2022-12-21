@@ -28,6 +28,7 @@ describe("Lottery helper functions tests", function () {
   it("Test getLotteryItem", async function () {
     await contract.addNewLottery(
       lotteryItem.item,
+      lotteryItem.name,
       lotteryItem.minPeople,
       lotteryItem.price,
       future
@@ -35,6 +36,7 @@ describe("Lottery helper functions tests", function () {
     const lotteryIdsList = await contract.getLoteryIds();
     const getLotteryItem = await contract.getLotteryItem(lotteryIdsList[0]);
     expect(getLotteryItem.item).to.equal(lotteryItem.item);
+    expect(getLotteryItem.name).to.equal(lotteryItem.name);
     expect(getLotteryItem.minPeople).to.equal(lotteryItem.minPeople);
     expect(getLotteryItem.price).to.equal(lotteryItem.price);
     expect(getLotteryItem.finishDate).to.be.greaterThan(now);

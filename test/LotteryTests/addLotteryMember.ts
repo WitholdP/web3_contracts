@@ -15,6 +15,7 @@ describe("Add Lottery Member tests", function () {
     contract = await Contract.deploy();
     await contract.addNewLottery(
       lotteryItem.item,
+      lotteryItem.name,
       lotteryItem.minPeople,
       lotteryItem.price,
       future
