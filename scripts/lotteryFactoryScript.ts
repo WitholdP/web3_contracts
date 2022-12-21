@@ -23,7 +23,7 @@ const main = async () => {
   // await checkBalances(contract, owner, otherAccount, otherAccount2);
 
   // Show lottery details
-  console.log(await getLotteryDetails(contract, 1));
+  // console.log(await getLotteryDetails(contract, 1));
 
   // Show lottery members
   // console.log(await contract.showLotteryMembers(1));
