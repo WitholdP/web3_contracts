@@ -24,8 +24,6 @@ if (PRODUCTION) {
   };
 }
 
-console.log(networks);
-
 const config: HardhatUserConfig = {
   solidity: "0.8.17",
   networks: networks,

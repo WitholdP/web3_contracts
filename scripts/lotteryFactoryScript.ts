@@ -10,6 +10,8 @@ const main = async () => {
 
   await addNewLottery(contract);
 
+  console.log(await contract.getBuyIn(1));
+
   // Add new member to lottery
   await addNewLotteryMember(contract, 1, otherAccount, otherAccount2);
 
